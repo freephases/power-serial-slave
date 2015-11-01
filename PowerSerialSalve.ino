@@ -85,7 +85,7 @@ void setup() {
   Serial.println("Emon power");
   delay(100);
   masterMaga.begin(9600);
-  masterMaga.println("R|0.0000|-");
+  //masterMaga.println("R|0.0000|0.0000|0.0000|-");//send zeros to start with
   setupPower();
   led.off(); 
 }
