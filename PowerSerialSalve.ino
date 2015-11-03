@@ -1,5 +1,5 @@
 /**
-* Simple program to send values from Emon lib to software ware serial ports 6 (rx) and 7 (tx) 
+* Simple program to send values from Emon object to software serial ports 6 (rx) and 7 (tx) 
 *
 *  RX is connected to Mega serial 1 TX
 *  TX is connected to Mega serial 1 RX
@@ -10,7 +10,6 @@
 */
 #include <OnOff.h>
 
-
 #include <SoftwareSerial.h>
 #include <math.h> 
 #include <EmonLib.h>
@@ -20,7 +19,7 @@
 OnOff led(13);
 
 // *****************************
-SoftwareSerial masterMaga(6,7);
+SoftwareSerial master(6,7);
 
 EnergyMonitor ACsensor; 
 const unsigned long readPowerInterval = 10000;//read every 2.5 sec, calcVI times out at 2 secs max
@@ -38,7 +37,6 @@ void setupPower()
   
   }
 }
-
 
 void readPower() {
    led.on();
@@ -67,11 +65,11 @@ void sendPower() {
   
    
   //build output up to send to master
-  sprintf(buf, "R|%s|%s|%s|-", 
+  sprintf(buf, "R|%s|%s|%s|!", 
     powerBuf, 
     VrmsBuf,
     IrmsBuf);
-  masterMaga.println(buf); //send
+  master.println(buf); //send
   
   if (DEBUG_TO_SERIAL==1) {
     Serial.println(buf);
@@ -84,8 +82,8 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Emon power");
   delay(100);
-  masterMaga.begin(9600);
-  //masterMaga.println("R|0.0000|0.0000|0.0000|-");//send zeros to start with
+  master.begin(9600);
+  //master.println("R|0.0000|0.0000|0.0000|-");//send zeros to start with
   setupPower();
   led.off(); 
 }
