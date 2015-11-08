@@ -3,6 +3,8 @@
 *
 *  RX is connected to Mega serial 1 TX
 *  TX is connected to Mega serial 1 RX
+*
+*  Version 0.0.1.2
 */
 
 /**
@@ -29,21 +31,23 @@ PayloadTX emontx;
 
 void setupPower()
 {
-  ACsensor.current(1, 60.606);//60.606);    //111.1  //155.5
-  ACsensor.voltage(0, 268.97, 1.7);   
+  ACsensor.current(1, 121.5);//60.606);    //111.1  //155.5
+  ACsensor.voltage(0, 256.97, 1.7);   //268.97
   //calc power a few times to level out
   for(int i=0; i<10; i++) {
-    ACsensor.calcVI(20, 2000);  // Calculate 
+    ACsensor.calcVI(30, 2000);  // Calculate 
   
   }
 }
 
 void readPower() {
    led.on();
-   ACsensor.calcVI(20, 2000);  // Calculate 
+   ACsensor.calcVI(60, 3000);  // Calculate 
    emontx.power = ACsensor.realPower;
+   if (emontx.power < 1.000) emontx.power = 0.00;
    emontx.Vrms = ACsensor.Vrms;//*100;    
    emontx.Irms = ACsensor.Irms;    
+   if (emontx.power < 1.000) emontx.Irms = 0.00;
    led.off();
 }
 
@@ -74,16 +78,16 @@ void sendPower() {
   if (DEBUG_TO_SERIAL==1) {
     Serial.println(buf);
   }
-  delay(64);  
+  delay(100);  
 }
 
 void setup() {
   led.on();
   Serial.begin(9600);
   Serial.println("Emon power");
-  delay(100);
+  delay(100); 
   master.begin(9600);
-  //master.println("R|0.0000|0.0000|0.0000|-");//send zeros to start with
+ // master.println("S|Started!-");
   setupPower();
   led.off(); 
 }
